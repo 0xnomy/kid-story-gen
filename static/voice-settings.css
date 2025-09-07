@@ -1,0 +1,120 @@
+/* Voice Settings Panel Styles */
+.voice-settings-panel {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    z-index: 1000;
+}
+
+.voice-settings-toggle {
+    background: white;
+    border: 2px solid var(--accent-color-2);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.voice-settings-toggle:hover {
+    transform: rotate(30deg);
+}
+
+.settings-icon {
+    font-size: 1.4rem;
+}
+
+.voice-settings-content {
+    position: absolute;
+    bottom: 50px;
+    right: 0;
+    background: white;
+    border-radius: var(--border-radius-md);
+    padding: var(--space-md);
+    width: 240px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    border: 3px solid var(--accent-color-2);
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.voice-settings-panel.open .voice-settings-content {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.voice-settings-content h4 {
+    margin-top: 0;
+    margin-bottom: var(--space-sm);
+    color: var(--accent-color-2);
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.setting-group {
+    margin-bottom: var(--space-sm);
+    display: flex;
+    align-items: center;
+}
+
+.setting-group label {
+    margin-right: var(--space-sm);
+    font-size: 0.9rem;
+    flex: 1;
+}
+
+.setting-group input[type="range"] {
+    width: 100px;
+    accent-color: var(--accent-color-2);
+}
+
+.setting-group input[type="checkbox"] {
+    margin-right: var(--space-xs);
+    accent-color: var(--accent-color-2);
+}
+
+/* Reading indicator wave animation */
+@keyframes wave {
+
+    0%,
+    100% {
+        height: 8px;
+    }
+
+    50% {
+        height: 16px;
+    }
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .voice-settings-panel {
+        bottom: 60px;
+    }
+
+    .voice-settings-content {
+        right: -10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .voice-settings-toggle {
+        width: 36px;
+        height: 36px;
+    }
+
+    .settings-icon {
+        font-size: 1.2rem;
+    }
+
+    .voice-settings-content {
+        width: 200px;
+    }
+}

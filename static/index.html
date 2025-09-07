@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Children's Storybook Generator</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="book-styles.css">
+    <link rel="stylesheet" href="kid-friendly-animations.css">
+    <link rel="stylesheet" href="voice-settings.css">
+    <link rel="stylesheet" href="react-flipbook.css">
+
+    <!-- React and PageFlip Dependencies -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-pageflip@2.0.3/build/react-pageflip.js" crossorigin></script>
+
+    <meta name="description" content="Generate interactive children's stories with beautiful illustrations">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo-container">
+                <div class="star-burst">✨</div>
+                <h1>Story<span class="wonders-text">Wonders</span> 🌈</h1>
+                <div class="star-burst">✨</div>
+            </div>
+            <p class="tagline"><span class="magic-word">Magic</span> stories for <span class="kids-text">kids</span>
+                with fun pictures! 🚀 🦄</p>
+            <div class="character-parade">
+                <div class="bouncing-character">🐰</div>
+                <div class="bouncing-character delay-1">🦊</div>
+                <div class="bouncing-character delay-2">🐢</div>
+                <div class="bouncing-character delay-3">🦁</div>
+                <div class="bouncing-character delay-4">🐘</div>
+            </div>
+        </header>
+
+        <main>
+            <section id="story-form" class="story-form">
+                <div class="form-container">
+                    <h2>Create Your Magical Story! ✏️</h2>
+                    <div class="input-group">
+                        <label for="story-prompt">What's your story idea? 💭</label>
+                        <textarea id="story-prompt" rows="3"
+                            placeholder="Example: A brave little dragon who makes friends with butterflies 🐉 🦋"
+                            required></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="page-count">How many pages? 📚</label>
+                        <div class="range-container">
+                            <input type="range" id="page-count" min="2" max="10" value="6">
+                            <span id="page-count-value">6</span>
+                        </div>
+                        <div class="page-icons">
+                            <span class="book-icon">📕</span>
+                            <span class="book-icon">📘</span>
+                            <span class="book-icon">📙</span>
+                        </div>
+                    </div>
+                    <button id="generate-btn" class="primary-btn">Make My Story! ✨</button>
+                    <div id="loading" class="loading hidden">
+                        <div class="spinner"></div>
+                        <div class="loading-characters">
+                            <span class="loading-char">🧚</span>
+                            <span class="loading-char">📝</span>
+                            <span class="loading-char">🎨</span>
+                        </div>
+                        <p>The story fairies are working their magic...</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="story-viewer" class="story-viewer hidden">
+                <div class="book-controls top-controls">
+                    <button id="back-to-form" class="secondary-btn"><span class="icon">🏠</span> New Story!</button>
+                    <button id="toggle-read-aloud" class="secondary-btn bubble-button">
+                        <span class="icon">🔊</span> <span id="read-aloud-text">Read To Me!</span>
+                    </button>
+                    <!-- Reading indicator will be added here by JavaScript -->
+                    <div class="floating-helper">
+                        <div class="helper-character">🦉</div>
+                        <div class="helper-text">Click the arrows to turn pages!</div>
+                    </div>
+                    <!-- Voice selector will be added here by JavaScript -->
+                </div>
+
+                <!-- React Flipbook Container (shown by default) -->
+                <div id="react-flipbook-container" class="react-flipbook-wrapper"></div>
+
+                <!-- Traditional book container (hidden by default) -->
+                <div id="traditional-book" class="book-container hidden">
+                    <div class="book-spine">
+                        <div class="spine-title">Story</div>
+                    </div>
+                    <div id="book" class="book">
+                        <!-- Book front cover -->
+                        <div class="page cover-page front-cover" id="cover-page">
+                            <div class="page-content">
+                                <h1 id="story-title">Loading Story...</h1>
+                                <div class="cover-image-container">
+                                    <div class="cover-image" id="cover-image"></div>
+                                </div>
+                                <p class="age-range">For ages <span id="age-range">4-8</span></p>
+                            </div>
+                            <!-- Right edge for page turning -->
+                            <div class="page-edge right-edge" data-action="next"></div>
+                        </div>
+
+                        <!-- Dynamic pages will be added here by JavaScript -->
+
+                        <!-- Book back cover -->
+                        <div class="page back-cover" id="back-cover">
+                            <div class="page-content">
+                                <div class="back-cover-content">
+                                    <h2>The End! 🎉</h2>
+                                    <div class="celebration-emojis">
+                                        <div class="celebration-emoji">🌟</div>
+                                        <div class="celebration-emoji">🎈</div>
+                                        <div class="celebration-emoji">🎊</div>
+                                    </div>
+                                    <p>Thanks for reading!</p>
+                                    <div class="celebration-characters">
+                                        <div class="celebration-character">🦄</div>
+                                        <div class="celebration-character">🦁</div>
+                                        <div class="celebration-character">🐼</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Page turning click areas -->
+                    <div class="page-turn-area left-turn" id="turn-left"></div>
+                    <div class="page-turn-area right-turn" id="turn-right"></div>
+                </div>
+
+                <!-- Flipbook container removed -->
+
+                <div class="book-controls bottom-controls">
+                    <button id="prev-page" class="nav-btn" disabled>
+                        <span class="icon">🔙</span> Back
+                    </button>
+                    <div class="page-indicator">
+                        <div class="page-number-container">
+                            <span class="page-emoji">📖</span>
+                            <span id="current-page">1</span>/<span id="total-pages">1</span>
+                        </div>
+                        <div class="auto-turn-container">
+                            <input type="checkbox" id="auto-turn-pages" class="auto-turn-checkbox">
+                            <label for="auto-turn-pages" class="auto-turn-label">Auto-turn pages 📄</label>
+                        </div>
+                    </div>
+                    <button id="next-page" class="nav-btn">
+                        Next <span class="icon">🔜</span>
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <div id="error-message" class="error-message hidden">
+            <div class="error-content">
+                <span class="close-error">&times;</span>
+                <h3>Oops! 🙈 Something went wrong</h3>
+                <p id="error-text"></p>
+                <div class="error-character">😢</div>
+                <button class="try-again-btn">Let's Try Again! 🚀</button>
+            </div>
+        </div>
+
+        <div class="cloud-decoration cloud-1">☁️</div>
+        <div class="cloud-decoration cloud-2">☁️</div>
+        <div class="cloud-decoration cloud-3">☁️</div>
+
+        <footer>
+            <div class="footer-characters">
+                <div class="footer-char">🐱</div>
+                <div class="footer-char">🐶</div>
+                <div class="footer-char">🐼</div>
+            </div>
+            <p>StoryWonders &copy; 2025</p>
+            <p class="credit">Magic pictures by <a
+                    href="https://developers.googleblog.com/en/generate-images-gemini-2-0-flash-preview/"
+                    target="_blank">Gemini 2.0</a> ✨ |
+                Stories by <a href="https://groq.com/" target="_blank">Groq Llama 4</a> 📚</p>
+        </footer>
+    </div>
+
+    <!-- App JavaScript -->
+    <script src="script.js"></script>
+    <script src="book-script.js"></script>
+    <script src="kid-friendly-script.js"></script>
+    <script src="fairy-tale-voice.js"></script>
+    <script src="react-flipbook.js"></script>
+</body>
+
+</html>
